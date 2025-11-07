@@ -66,8 +66,8 @@ const SignupPage = () => {
     <div className="flex h-screen w-screen flex-col items-center justify-center gap-3">
       <Form {...methods}>
         <form onSubmit={methods.handleSubmit(handleSubmit)}>
-          <Card className="w-[500px] p-2">
-            <CardHeader>
+          <Card className="w-[500px] border-none bg-transparent p-2 shadow-none">
+            <CardHeader className="text-center">
               <CardTitle>Crie a sua conta</CardTitle>
               <CardDescription>Insira os seus dados abaixo.</CardDescription>
             </CardHeader>
