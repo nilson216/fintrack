@@ -5,12 +5,16 @@ import {
   LOCAL_STORAGE_REFRESH_TOKEN_KEY,
 } from '@/constants/local-storage'
 
+const API_URL =
+  import.meta.env.VITE_API_URL ||
+  'https://finance-app-api-17xp.onrender.com/api'
+
 export const protectedApi = axios.create({
-  baseURL: 'https://finance-app-api-17xp.onrender.com/api',
+  baseURL: API_URL,
 })
 
 export const publicApi = axios.create({
-  baseURL: 'https://finance-app-api-17xp.onrender.com/api',
+  baseURL: API_URL,
 })
 
 protectedApi.interceptors.request.use((request) => {
