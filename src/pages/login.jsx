@@ -1,7 +1,5 @@
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
-import { Link } from 'react-router-dom'
-import { z } from 'zod'
+import { Loader2Icon } from 'lucide-react'
+import { Link, Navigate } from 'react-router'
 
 import PasswordInput from '@/components/password-input'
 import { Button } from '@/components/ui/button'
@@ -18,70 +16,56 @@ import {
   FormControl,
   FormField,
   FormItem,
+  FormLabel,
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-
-const loginSchema = z.object({
-  email: z
-    .string()
-    .trim()
-    .min(1, { message: 'O e-mail é obrigatório' })
-    .email({ message: 'E-mail inválido' }),
-  password: z
-    .string()
-    .trim()
-    .min(6, { message: 'A senha deve ter no mínimo 6 caracteres' }),
-})
+import { useAuthContext } from '@/contexts/auth'
+import { useLoginForm } from '@/forms/hooks/user'
 
 const LoginPage = () => {
-  const methods = useForm({
-    resolver: zodResolver(loginSchema),
-    defaultValues: {
-      email: '',
-      password: '',
-    },
-  })
+  const { user, login, isInitializing } = useAuthContext()
+  const { form } = useLoginForm()
 
-  const handleSubmit = (data) => {
-    console.log(data)
+  const handleSubmit = (data) => login(data)
+
+  if (isInitializing) return null
+
+  if (user) {
+    return <Navigate to="/" />
   }
 
   return (
     <div className="flex h-screen w-screen flex-col items-center justify-center gap-3">
-      <Form {...methods}>
-        <form onSubmit={methods.handleSubmit(handleSubmit)}>
-          <Card className="w-[500px] border-none bg-transparent p-2 shadow-none">
-            <CardHeader className="text-center">
-              <CardTitle>Entre na sua conta</CardTitle>
-              <CardDescription>Insira seus dados abaixo.</CardDescription>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(handleSubmit)}>
+          <Card className="w-[500px]">
+            <CardHeader>
+              <CardTitle>Faça login</CardTitle>
+              <CardDescription>
+                Entre com a sua conta inserindo seus dados abaixo.
+              </CardDescription>
             </CardHeader>
-
-            <CardContent className="space-y-2">
-              {/* Email Field */}
+            <CardContent className="space-y-4">
               <FormField
+                control={form.control}
                 name="email"
-                control={methods.control}
                 render={({ field }) => (
                   <FormItem>
+                    <FormLabel>E-mail</FormLabel>
                     <FormControl>
-                      <Input
-                        type="email"
-                        placeholder="Digite seu e-mail"
-                        {...field}
-                      />
+                      <Input placeholder="Digite seu e-mail" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-
-              {/* Password Field */}
               <FormField
+                control={form.control}
                 name="password"
-                control={methods.control}
                 render={({ field }) => (
                   <FormItem>
+                    <FormLabel>Senha</FormLabel>
                     <FormControl>
                       <PasswordInput
                         placeholder="Digite sua senha"
@@ -93,20 +77,21 @@ const LoginPage = () => {
                 )}
               />
             </CardContent>
-
             <CardFooter>
-              <Button type="submit" className="w-full">
-                Fazer Login
+              <Button className="w-full" disabled={form.formState.isSubmitting}>
+                {form.formState.isSubmitting && (
+                  <Loader2Icon className="animate-spin" />
+                )}
+                Fazer login
               </Button>
             </CardFooter>
           </Card>
         </form>
       </Form>
-
       <div className="flex items-center justify-center">
-        <p className="text-center opacity-50">Não possui uma conta?</p>
+        <p className="text-center opacity-50">Ainda não possui uma conta?</p>
         <Button variant="link" asChild>
-          <Link to="/signup">Crie uma conta</Link>
+          <Link to="/signup">Crie agora</Link>
         </Button>
       </div>
     </div>
