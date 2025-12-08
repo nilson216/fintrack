@@ -1,11 +1,7 @@
-import { Button } from '@/components/ui/button'
+import { Button } from './components/ui/button'
 
 const App = () => {
-  return (
-    <div className="Dark">
-      <Button>Click me</Button>
-    </div>
-  )
+  return <Button>Hello world</Button>
 }
 
 export default App
