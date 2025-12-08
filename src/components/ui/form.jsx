@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils'
 
 const Form = FormProvider
 
-const FormFieldContext = React.createContext(null)
+const FormFieldContext = React.createContext({})
 
 const FormField = ({ ...props }) => {
   return (
@@ -22,15 +22,11 @@ const useFormField = () => {
   const itemContext = React.useContext(FormItemContext)
   const { getFieldState, formState } = useFormContext()
 
+  const fieldState = getFieldState(fieldContext.name, formState)
+
   if (!fieldContext) {
     throw new Error('useFormField should be used within <FormField>')
   }
-
-  if (!itemContext) {
-    throw new Error('useFormField should be used within <FormItem>')
-  }
-
-  const fieldState = getFieldState(fieldContext.name, formState)
 
   const { id } = itemContext
 
@@ -44,7 +40,7 @@ const useFormField = () => {
   }
 }
 
-const FormItemContext = React.createContext(null)
+const FormItemContext = React.createContext({})
 
 const FormItem = React.forwardRef(({ className, ...props }, ref) => {
   const id = React.useId()
@@ -107,7 +103,7 @@ FormDescription.displayName = 'FormDescription'
 const FormMessage = React.forwardRef(
   ({ className, children, ...props }, ref) => {
     const { error, formMessageId } = useFormField()
-    const body = error ? String(error?.message ?? '') : children
+    const body = error ? String(error?.message) : children
 
     if (!body) {
       return null
