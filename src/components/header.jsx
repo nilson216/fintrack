@@ -1,7 +1,11 @@
 import { ChevronDownIcon, LogOutIcon } from 'lucide-react'
 
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Button } from '@/components/ui/button'
+import logo from '@/assets/images/logo.svg'
+import { useAuthContext } from '@/contexts/auth'
+
+import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
+import { Button } from './ui/button'
+import { Card, CardContent } from './ui/card'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,56 +13,53 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import { useAuthContext } from '@/contexts/auth'
+} from './ui/dropdown-menu'
 
-import logo from '../assets/images/image.png'
-import { Card, CardContent } from './ui/card'
-
-export const Header = () => {
+const Header = () => {
   const { user, signOut } = useAuthContext()
-
   return (
     <Card>
-      <CardContent className="px-8 py-4">
-        <header className="flex items-center justify-between">
-          <img src={logo} alt="Logo" className="h-12" />
-
+      <CardContent className="flex items-center justify-between px-8 py-4">
+        <div>
+          <img src={logo} alt="FinTrack" />
+        </div>
+        <div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="space-x-2">
-                <Avatar className="avatar-custom h-8 w-8 overflow-hidden rounded-full">
-                  <AvatarImage
-                    src="../../public/avatarUrl.png"
-                    className="rounded-full object-cover"
-                  />
-                  <AvatarFallback className="rounded-full">
-                    {user.firstName.charAt(0)}
-                    {user.lastName.charAt(0)}
+              <Button variant="outline" className="space-x-1">
+                <Avatar className="h-8 w-8">
+                  <AvatarImage src="https://github.com/shadcn.png" />
+                  <AvatarFallback>
+                    {user.firstName[0]}
+                    {user.lastName[0]}
                   </AvatarFallback>
                 </Avatar>
                 <p className="text-sm">
                   {user.firstName} {user.lastName}
                 </p>
-                <ChevronDownIcon className="ml-2 h-4 w-4" />
+                <ChevronDownIcon />
               </Button>
             </DropdownMenuTrigger>
-
             <DropdownMenuContent>
-              <DropdownMenuLabel>Minha Conta</DropdownMenuLabel>
+              <DropdownMenuLabel>Meu Perfil</DropdownMenuLabel>
               <DropdownMenuSeparator />
-
-              <DropdownMenuItem onClick={signOut} className="cursor-pointer">
-                <LogOutIcon className="mr-2 h-4 w-4" />
-                Sair
+              <DropdownMenuItem>
+                <Button
+                  variant="ghost"
+                  size="small"
+                  className="w-full justify-start"
+                  onClick={signOut}
+                >
+                  <LogOutIcon />
+                  Sair
+                </Button>
               </DropdownMenuItem>
-
-              <DropdownMenuSeparator />
-              <DropdownMenuLabel>Configurações</DropdownMenuLabel>
             </DropdownMenuContent>
           </DropdownMenu>
-        </header>
+        </div>
       </CardContent>
     </Card>
   )
 }
+
+export default Header
